@@ -11,7 +11,7 @@ class SuratUmumModel extends Model
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
     protected $allowedFields = [
-        'jenis', 'tgl_surat', 'pengirim', 'penerima', 'no_surat', 'perihal', 'isi_surat', 'foto_surat',
+        'type', 'jenis', 'tgl_surat', 'pengirim', 'penerima', 'no_surat', 'perihal', 'isi_surat', 'foto_surat',
         'id_surat_masuk', 'id_surat_keluar', 'created_at', 'updated_at', 'deleted_at'
     ];
 

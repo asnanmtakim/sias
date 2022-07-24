@@ -37,6 +37,17 @@
                <div class="x_content">
                   <div class="row">
                      <div class="col-sm-6 col-md-3 mb-3">
+                        <label for="select_type">Jenis</label>
+                        <select class="form-control select2" id="select_type">
+                           <option value="" selected>Semua Jenis</option>
+                           <option value="1" <?= session()->get('type') == '1' ? 'selected' : ''; ?>>Biasa</option>
+                           <option value="2" <?= session()->get('type') == '2' ? 'selected' : ''; ?>>Rahasia</option>
+                           <?php if (in_groups('superadmin')) : ?>
+                              <option value="3" <?= session()->get('type') == '3' ? 'selected' : ''; ?>>Sangat Rahasia</option>
+                           <?php endif; ?>
+                        </select>
+                     </div>
+                     <div class="col-sm-6 col-md-3 mb-3">
                         <label for="select_pengirim">Pengirim</label>
                         <select class="form-control select2" id="select_pengirim">
                            <option value="" selected>Semua Pengirim</option>
@@ -73,6 +84,7 @@
                                  <th class="text-center">
                                     #
                                  </th>
+                                 <th>Jenis Surat</th>
                                  <th>Tanggal Surat</th>
                                  <th>Pengirim</th>
                                  <th>Penerima</th>
@@ -132,6 +144,7 @@
          ajax: {
             url: BASE_URL + "/surat-masuk-all",
             data: function(d) {
+               d.type = $('#select_type').val();
                d.pengirim = $('#select_pengirim').val();
                d.penerima = $('#select_penerima').val();
                d.perihal = $('#select_perihal').val();
@@ -141,6 +154,10 @@
          columns: [{
                data: 'no',
                orderable: false
+            },
+            {
+               data: 'type',
+               className: 'text-center'
             },
             {
                data: 'tgl_surat'
@@ -195,6 +212,13 @@
          },
       });
 
+      $('#select_type').change(function(event) {
+         var id = $(this).val()
+         var name = 'type'
+         setSess(name, id).done(function(res) {
+            table.ajax.reload();
+         })
+      });
       $('#select_pengirim').change(function(event) {
          var id = $(this).val()
          var name = 'pengirim'

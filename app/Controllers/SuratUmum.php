@@ -47,12 +47,19 @@ class SuratUmum extends BaseController
     {
         $db = db_connect();
         $builder = $db->table('surat_umum')
-            ->select('id_surat_umum, tgl_surat, pengirim, penerima, no_surat, perihal, isi_surat, foto_surat, id_surat_masuk, id_surat_keluar, created_at')
+            ->select('id_surat_umum, tgl_surat, type, pengirim, penerima, no_surat, perihal, isi_surat, foto_surat, id_surat_masuk, id_surat_keluar, created_at')
             ->where('jenis', 'IN')
             ->where('deleted_at', null);
 
         return DataTable::of($builder)
             ->filter(function ($builder, $request) {
+                if ($request->type) {
+                    $builder->where('type', $request->type);
+                } else {
+                    if (in_groups('admin')) {
+                        $builder->whereIn('type', ['1', '2']);
+                    }
+                }
                 if ($request->pengirim)
                     $builder->where('pengirim', $request->pengirim);
                 if ($request->penerima)
@@ -64,6 +71,15 @@ class SuratUmum extends BaseController
                 $builder->orderBy('created_at', 'DESC');
             })
             ->addNumbering('no')
+            ->edit('type', function ($row) {
+                if ($row->type == '1') {
+                    return '<h6 class="m-0"><span class="badge badge-primary">Biasa</span></h6>';
+                } elseif ($row->type == '2') {
+                    return '<h6 class="m-0"><span class="badge badge-warning">Rahasia</span></h6>';
+                } else {
+                    return '<h6 class="m-0"><span class="badge badge-danger">Sangat Rahasia</span></h6>';
+                }
+            })
             ->edit('tgl_surat', function ($row) {
                 return tanggalIndo($row->tgl_surat);
             })
@@ -100,12 +116,19 @@ class SuratUmum extends BaseController
     {
         $db = db_connect();
         $builder = $db->table('surat_umum')
-            ->select('id_surat_umum, tgl_surat, pengirim, penerima, no_surat, perihal, isi_surat, foto_surat, id_surat_masuk, id_surat_keluar, created_at')
+            ->select('id_surat_umum, tgl_surat, type, pengirim, penerima, no_surat, perihal, isi_surat, foto_surat, id_surat_masuk, id_surat_keluar, created_at')
             ->where('jenis', 'OUT')
             ->where('deleted_at', null);
 
         return DataTable::of($builder)
             ->filter(function ($builder, $request) {
+                if ($request->type) {
+                    $builder->where('type', $request->type);
+                } else {
+                    if (in_groups('admin')) {
+                        $builder->whereIn('type', ['1', '2']);
+                    }
+                }
                 if ($request->pengirim)
                     $builder->where('pengirim', $request->pengirim);
                 if ($request->penerima)
@@ -117,6 +140,15 @@ class SuratUmum extends BaseController
                 $builder->orderBy('created_at', 'DESC');
             })
             ->addNumbering('no')
+            ->edit('type', function ($row) {
+                if ($row->type == '1') {
+                    return '<h6 class="m-0"><span class="badge badge-primary">Biasa</span></h6>';
+                } elseif ($row->type == '2') {
+                    return '<h6 class="m-0"><span class="badge badge-warning">Rahasia</span></h6>';
+                } else {
+                    return '<h6 class="m-0"><span class="badge badge-danger">Sangat Rahasia</span></h6>';
+                }
+            })
             ->edit('tgl_surat', function ($row) {
                 return tanggalIndo($row->tgl_surat);
             })
@@ -189,6 +221,7 @@ class SuratUmum extends BaseController
             $jenis = $this->request->getPost('jenis');
             $data = [
                 'jenis' => $jenis,
+                'type' => $this->request->getPost('type'),
                 'tgl_surat' => date('Y-m-d', strtotime($this->request->getPost('tgl_surat'))),
                 'pengirim' => $this->request->getPost('pengirim'),
                 'penerima' => $this->request->getPost('penerima'),
@@ -351,6 +384,13 @@ class SuratUmum extends BaseController
         $config = [
             'jenis' => [
                 'label' => 'Jenis',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => '{field} harus diisi.',
+                ]
+            ],
+            'type' => [
+                'label' => 'Jenis surat',
                 'rules' => 'required',
                 'errors' => [
                     'required' => '{field} harus diisi.',

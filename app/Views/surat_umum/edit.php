@@ -59,14 +59,64 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-6 form-group mb-3">
+                                <div class="col-sm-3 form-group mb-3">
+                                    <label for="type">Jenis Surat*</label>
+                                    <select class="form-control select2 <?= ($validation->hasError('type')) ? 'is-invalid' : ''; ?>" id="type" name="type">
+                                        <option disabled selected>--Pilih Jenis Surat--</option>
+                                        <option value="1" <?php if (old('type')) {
+                                                                if (old('type') == '1') {
+                                                                    print 'selected';
+                                                                } else {
+                                                                    print '';
+                                                                }
+                                                            } else {
+                                                                if ($surat['type'] == '1') {
+                                                                    print 'selected';
+                                                                } else {
+                                                                    print '';
+                                                                }
+                                                            } ?>>Biasa</option>
+                                        <option value="2" <?php if (old('type')) {
+                                                                if (old('type') == '2') {
+                                                                    print 'selected';
+                                                                } else {
+                                                                    print '';
+                                                                }
+                                                            } else {
+                                                                if ($surat['type'] == '2') {
+                                                                    print 'selected';
+                                                                } else {
+                                                                    print '';
+                                                                }
+                                                            } ?>>Rahasia</option>
+                                        <?php if (in_groups('superadmin')) : ?>
+                                            <option value="3" <?php if (old('type')) {
+                                                                    if (old('type') == '3') {
+                                                                        print 'selected';
+                                                                    } else {
+                                                                        print '';
+                                                                    }
+                                                                } else {
+                                                                    if ($surat['type'] == '3') {
+                                                                        print 'selected';
+                                                                    } else {
+                                                                        print '';
+                                                                    }
+                                                                } ?>>Sangat Rahasia</option>
+                                        <?php endif; ?>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        <?= $validation->getError('type') ?>
+                                    </div>
+                                </div>
+                                <div class="col form-group mb-3">
                                     <label for="no_surat">No Surat*</label>
                                     <input type="text" class="form-control <?= ($validation->hasError('no_surat')) ? 'is-invalid' : ''; ?>" id="no_surat" name="no_surat" value="<?= old('no_surat') ? old('no_surat') : $surat['no_surat']; ?>" placeholder="No Surat">
                                     <div class="invalid-feedback">
                                         <?= $validation->getError('no_surat') ?>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 form-group mb-3">
+                                <div class="col form-group mb-3">
                                     <label for="perihal">Perihal surat*</label>
                                     <input type="text" class="form-control <?= ($validation->hasError('perihal')) ? 'is-invalid' : ''; ?>" id="perihal" name="perihal" value="<?= old('perihal') ? old('perihal') : $surat['perihal']; ?>" placeholder="Perihal surat">
                                     <div class="invalid-feedback">
@@ -109,7 +159,7 @@
                             <?php if ($surat['jenis'] == 'OUT') : ?>
                                 <div class="row">
                                     <div class="col-sm-12 form-group mb-3">
-                                        <label for="surat_masuk">Jawaban Dari Surat Masuk*</label>
+                                        <label for="surat_masuk">Jawaban Dari Surat Masuk</label>
                                         <select class="form-control select2 <?= ($validation->hasError('surat_masuk')) ? 'is-invalid' : ''; ?>" id="surat_masuk" name="surat_masuk" style="width: 100%;">
                                             <option value="" disabled selected>--Pilih Surat Masuk--</option>
                                             <?php foreach ($surat_masuk as $sm) : ?>

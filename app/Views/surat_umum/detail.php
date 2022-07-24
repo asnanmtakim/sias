@@ -37,6 +37,21 @@
                      <hr class="my-2">
                      <div class="row">
                         <label class="col-4 my-0 font-weight-bold">
+                           Jenis Surat
+                        </label>
+                        <div class="col-8">
+                           <?php if ($surat['type'] == 1) : ?>
+                              <h5 class="m-0"><span class="badge badge-primary">Biasa</span></h5>
+                           <?php elseif ($surat['type'] == 2) : ?>
+                              <h5 class="m-0"><span class="badge badge-warning">Rahasia</span></h5>
+                           <?php else : ?>
+                              <h5 class="m-0"><span class="badge badge-danger">Sangat Rahasia</span></h5>
+                           <?php endif; ?>
+                        </div>
+                     </div>
+                     <hr class="my-2">
+                     <div class="row">
+                        <label class="col-4 my-0 font-weight-bold">
                            Tanggal Surat
                         </label>
                         <div class="col-8">

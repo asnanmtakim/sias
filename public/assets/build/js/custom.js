@@ -705,7 +705,7 @@ function init_chart_doughnut() {
          },
          options: {
             legend: false,
-            responsive: false,
+            responsive: true,
          },
       };
 
